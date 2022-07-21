@@ -10,7 +10,6 @@ module "backend" {
   source  = "stratusgrid/terraform-aws-backend-creation"
   project_name       = "my-awesome-project"
   logging_bucket     = "my-awesome-project-logging"
-  input_tags = merge(local.tags, {})
 }
 ```
 
