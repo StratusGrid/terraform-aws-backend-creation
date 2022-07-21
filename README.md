@@ -3,6 +3,17 @@
 
 GitHub: [StratusGrid/terraform-aws-backend-creation](https://github.com/StratusGrid/terraform-aws-backend-creation)
 
+## Example
+
+```hcl
+module "backend" {
+  source  = "stratusgrid/terraform-aws-backend-creation"
+  project_name       = "my-awesome-project"
+  logging_bucket     = "my-awesome-project-logging"
+  input_tags = merge(local.tags, {})
+}
+```
+
 ## StratusGrid Standards we assume
 - This repo is designed to be built upon the [StratusGrid Account Starter Template](https://github.com/StratusGrid/terraform-account-starter), this base template configures the remote backend and SOPS baseline requirements.
 - All resource names and name tags shall use `_` and not `-`s

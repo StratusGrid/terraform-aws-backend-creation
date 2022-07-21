@@ -9,6 +9,12 @@ content: |-
 
   GitHub: [StratusGrid/terraform-aws-backend-creation](https://github.com/StratusGrid/terraform-aws-backend-creation)
 
+  ## Example
+
+  ```hcl
+  {{ include "examples/example1.tfnot" }}
+  ```
+
   ## StratusGrid Standards we assume
   - This repo is designed to be built upon the [StratusGrid Account Starter Template](https://github.com/StratusGrid/terraform-account-starter), this base template configures the remote backend and SOPS baseline requirements.
   - All resource names and name tags shall use `_` and not `-`s
