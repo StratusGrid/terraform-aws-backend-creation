@@ -1,21 +1,3 @@
-data "aws_caller_identity" "current" {}
-
-data "aws_iam_policy_document" "this" {
-  dynamic "statement" {
-    for_each = local.kms_allowed_accounts
-    content {
-      sid    = "Enable IAM Permissions from ${statement.value}"
-      effect = "Allow"
-      principals {
-        identifiers = ["arn:aws:iam::${statement.value}:root"]
-        type        = "AWS"
-      }
-      actions   = ["kms:*"]
-      resources = ["*"]
-    }
-  }
-}
-
 locals {
   kms_allowed_accounts = compact([data.aws_caller_identity.current.account_id])
 }
@@ -47,7 +29,7 @@ resource "aws_s3_bucket_versioning" "this" {
   }
 }
 
-resource "aws_s3_bucket_server_side_encryption_configuration" "example" {
+resource "aws_s3_bucket_server_side_encryption_configuration" "this" {
   bucket = aws_s3_bucket.this.id
 
   rule {
