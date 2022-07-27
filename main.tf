@@ -5,7 +5,7 @@ locals {
 resource "aws_kms_key" "this" {
   description         = "Key used to encrypt terraform backend"
   tags                = merge(local.tags, {})
-  policy              = data.aws_iam_policy_document.this.json
+  policy              = data.aws_iam_policy_document.this_kms.json
   enable_key_rotation = true
 }
 
@@ -20,6 +20,11 @@ resource "aws_s3_bucket" "this" {
   lifecycle {
     prevent_destroy = true
   }
+}
+
+resource "aws_s3_bucket_policy" "this" {
+  bucket = aws_s3_bucket.this.id
+  policy = data.aws_iam_policy_document.this_s3.json
 }
 
 resource "aws_s3_bucket_versioning" "this" {
@@ -46,6 +51,24 @@ resource "aws_s3_bucket_public_access_block" "default" {
   ignore_public_acls      = true
   block_public_policy     = true
   restrict_public_buckets = true
+}
+
+resource "aws_cloudtrail" "this" {
+  name                          = "${var.project_name}-terraform-backend-trail" #"codepipeline-${var.project_name}-trail"
+  s3_bucket_name                = "${var.project_name}-terraform-backend"
+  include_global_service_events = false
+  s3_key_prefix = "prefix"
+  
+  # event_selector {
+  #   read_write_type           = "WriteOnly"
+  #   include_management_events = true
+
+  #   data_resource {
+  #     type = "AWS::S3::Object"
+
+  #     values = ["${data.aws_s3_bucket.bamboo-deploy-bucket.arn}/${var.project_A}/file.zip"]
+  #   }
+  # }
 }
 
 
