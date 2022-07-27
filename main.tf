@@ -9,17 +9,20 @@ resource "aws_kms_key" "this" {
   enable_key_rotation = true
 }
 
+#tfsec:ignore:aws-s3-enable-bucket-logging
 resource "aws_s3_bucket" "this" {
   bucket = "${var.project_name}-terraform-backend"
-
-  logging {
-    target_bucket = var.logging_bucket
-    target_prefix = "s3/${var.project_name}-terraform-backend/"
-  }
 
   lifecycle {
     prevent_destroy = true
   }
+}
+
+resource "aws_s3_bucket_logging" "this" {
+  count         = var.logging_bucket != "" ? 1 : 0
+  bucket        = aws_s3_bucket.this.id
+  target_bucket = var.logging_bucket
+  target_prefix = "${var.project_name}-terraform-backend/"
 }
 
 resource "aws_s3_bucket_versioning" "this" {
