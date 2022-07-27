@@ -15,4 +15,5 @@ variable "input_tags" {
 variable "logging_bucket" {
   description = "Name of the bucket used for store the terraform backend logs"
   type        = string
+  default     = ""
 }
