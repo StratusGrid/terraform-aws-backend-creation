@@ -1,30 +1,18 @@
 <!-- BEGIN_TF_DOCS -->
-# template-terraform-module-starter
+# terraform-aws-backend-creation
 
-GitHub: [StratusGrid/template-terraform-module-starter](https://github.com/StratusGrid/template-terraform-module-starter)
-
-This Repo is meant to act as a template which can be used
-when creating new modules.
-
-<span style="color:red">**Notes:</span>
-- Don't forget to change the module source repo tag in `tags.tf`!
-- Please remove all of the unnecessary initial documentation from the `.terraform-docs.yml` file as they exist purely to make the module and not for continual publishing.
-- Update the examples and include the Terraform registry information and proper version constraint. A version constraint would generally look like this `~> 1.0`
+GitHub: [StratusGrid/terraform-aws-backend-creation](https://github.com/StratusGrid/terraform-aws-backend-creation)
 
 ## Example
 
 ```hcl
-module "template_terraform_module_starter" {
-  source  = "StratusGrid/template-terraform-module-starter/aws"
-  version = "1.0.0"
-  # source   = "github.com/StratusGrid/terraform-aws-template-terraform-module-starter"
-  name       = "${var.name_prefix}-template-terraform-module-starter${local.name_suffix}"
-  input_tags = merge(local.common_tags, {})
+module "backend" {
+  source  = "stratusgrid/terraform-aws-backend-creation"
+  project_name       = "my-awesome-project"
 }
 ```
 
 ## StratusGrid Standards we assume
-
 - This repo is designed to be built upon the [StratusGrid Account Starter Template](https://github.com/StratusGrid/terraform-account-starter), this base template configures the remote backend and SOPS baseline requirements.
 - All resource names and name tags shall use `_` and not `-`s
 - The old naming standard for common files such as inputs, outputs, providers, etc was to prefix them with a `-`, this is no longer true as it's not POSIX compliant. Our pre-commit hooks will fail with this old standard.
@@ -32,39 +20,8 @@ module "template_terraform_module_starter" {
 
 ## Repo Knowledge
 
-This repo has several base requirements
-- This repo is based upon the AWS `~> 4.9.0` provider
-- The following packages are installed via brew: `tflint`, `terrascan`, `terraform-docs`, `gitleaks`, `tfsec`, `pre-commit`, `sops`, `go`
-- Install `bash` through Brew for Bash 5.0, otherwise it will fail with the error that looks like `declare: -g: invalid option`
-- If you need more tflint plugins, please edit the `.tflint.hcl` file with the instructions from [here](https://github.com/terraform-linters/tflint)
-- It's highly recommend that you follow the Git Pre-Commit Instructions below, these will run in GitHub though they should be ran locally to reduce issues
-- By default Terraform docs will always run so our auto generated docs are always up to date
-- This repo has been tested with [awsume](https://stratusgrid.atlassian.net/wiki/spaces/TK/pages/1564966913/Awsume)
-- The Terraform module standard is to place everything in the `main.tf` file, and this works well for small modules. Though StratusGrid suggests breaking it out into multiple files if the module is larger or touches many resources such as data blocks.
-- StratusGrid requires the tag logic be used and every resource within the module be tagged with `local.tags`
-
-### TFSec
-
-See the pre-commit tfsec documentation [here](https://github.com/antonbabenko/pre-commit-terraform#terraform_tfsec), this includes on how to bypass warnings
-
-## Apply this template via Terraform
-
-### Before this is applied, you need to configure the git hook on your local machine
-```bash
-#Verify you have bash5
-brew install bash
-
-# Test your pre-commit hooks - This will force them to run on all files
-pre-commit run --all-files
-
-# Add your pre-commit hooks forever
-pre-commit install
-```
-
-### Template Documentation
-
-A sample template Git Repo with how we should setup client infrastructure, in this case it's shared infrastructure.
-More details are available [here](https://stratusgrid.atlassian.net/wiki/spaces/MS/pages/2065694728/MSP+Client+Setup+-+Procedure) in confluence.
+This is the repository that holds the backend module creation for terraform. It's a way to have a quick backend with all the required security measures without the overhead.
+It will create a s3 bucket with a dynamodb table.
 
 ## Documentation
 
@@ -136,18 +93,30 @@ This file contains the plugin data for TFLint to run.
 
 | Name | Type |
 |------|------|
-| [aws_iam_role.example_resource](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_dynamodb_table.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/dynamodb_table) | resource |
+| [aws_kms_key.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kms_key) | resource |
+| [aws_s3_bucket.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_logging.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_logging) | resource |
+| [aws_s3_bucket_public_access_block.default](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
+| [aws_s3_bucket_server_side_encryption_configuration.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_server_side_encryption_configuration) | resource |
+| [aws_s3_bucket_versioning.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_versioning) | resource |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_input_tags"></a> [input\_tags](#input\_input\_tags) | Map of tags to apply to resources | `map(string)` | <pre>{<br>  "Developer": "StratusGrid",<br>  "Provisioner": "Terraform"<br>}</pre> | no |
-| <a name="input_name"></a> [name](#input\_name) | name to prepend to all resource names within module | `string` | n/a | yes |
+| <a name="input_logging_bucket"></a> [logging\_bucket](#input\_logging\_bucket) | Name of the bucket used for store the terraform backend logs | `string` | `""` | no |
+| <a name="input_project_name"></a> [project\_name](#input\_project\_name) | Name of the project that will hold this backend | `string` | n/a | yes |
 
 ## Outputs
 
-No outputs.
+| Name | Description |
+|------|-------------|
+| <a name="output_dynamodb_table_arn"></a> [dynamodb\_table\_arn](#output\_dynamodb\_table\_arn) | DynamoDB table arn |
+| <a name="output_dynamodb_table_name"></a> [dynamodb\_table\_name](#output\_dynamodb\_table\_name) | DynamoDB table name |
+| <a name="output_s3_bucket_arn"></a> [s3\_bucket\_arn](#output\_s3\_bucket\_arn) | S3 bucket ARN |
+| <a name="output_s3_bucket_id"></a> [s3\_bucket\_id](#output\_s3\_bucket\_id) | S3 bucket ID |
 
 ---
 

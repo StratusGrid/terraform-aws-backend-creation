@@ -1,5 +1,5 @@
-variable "name" {
-  description = "name to prepend to all resource names within module"
+variable "project_name" {
+  description = "Name of the project that will hold this backend"
   type        = string
 }
 
@@ -10,4 +10,10 @@ variable "input_tags" {
     Developer   = "StratusGrid"
     Provisioner = "Terraform"
   }
+}
+
+variable "logging_bucket" {
+  description = "Name of the bucket used for store the terraform backend logs"
+  type        = string
+  default     = ""
 }
