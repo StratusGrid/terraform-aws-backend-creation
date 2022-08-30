@@ -41,7 +41,6 @@ jobs:
       - name: Execute pre-commit
         run: |
           pre-commit run terraform_fmt --color=always --show-diff-on-failure --all-files
-  
 
   terraform_tflint:
     name: terraform_tflint
