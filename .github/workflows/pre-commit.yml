@@ -32,7 +32,7 @@ jobs:
         run: |
           curl -fsSL -o install.sh https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
           brew install tfenv
-          tfenv
+          tfenv install
       - name: Install pre-commit dependencies
         run: |
           pip install pre-commit
