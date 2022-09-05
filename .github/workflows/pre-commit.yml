@@ -5,5 +5,5 @@ on:
 
 jobs:
   build:
-    uses: StratusGrid/workflow-config/.github/workflows/pre-commit.yml@main
+    uses: StratusGrid/workflow-config/.github/workflows/pre-commit.yml@stp-31/semantic-versioning
     secrets: inherit
