@@ -9,7 +9,7 @@ resource "aws_kms_key" "this" {
   enable_key_rotation = true
 }
 
-resource "aws_kms_alias" "a" {
+resource "aws_kms_alias" "this" {
   name          = "${var.project_name}-terraform-backend"
   target_key_id = aws_kms_key.this.key_id
 }
