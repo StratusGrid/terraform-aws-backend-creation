@@ -5,5 +5,5 @@ on:
 
 jobs:
   build:
-    uses: StratusGrid/workflow-config/.github/workflows/pre-commit.yml@main
+    uses: StratusGrid/workflow-config/.github/workflows/pre-commit.yml@1237ea04b5fda2dbed556eb46ec8890c13ae0007
     secrets: inherit
