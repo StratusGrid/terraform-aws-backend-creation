@@ -10,7 +10,7 @@ resource "aws_kms_key" "this" {
 }
 
 resource "aws_kms_alias" "this" {
-  name          = "${var.project_name}-terraform-backend"
+  name          = "alias/${var.project_name}-terraform-backend"
   target_key_id = aws_kms_key.this.key_id
 }
 
