@@ -29,8 +29,11 @@ This file contains the plugin data for TFLint to run.
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.12 |
 ---
 # Test your pre-commit hooks - This will force them to run on all files
+```
 pre-commit run --all-files
+```
 # Add your pre-commit hooks forever
+```
 pre-commit install
 ```
 ## Contributors
