@@ -1,3 +1,5 @@
+header-from: ./.config/header.md
+
 version: ""
 
 formatter: markdown table
@@ -5,6 +7,8 @@ formatter: markdown table
 name: terraform-aws-backend-creation
 
 content: |-
+ {{ .Header }}
+
   # terraform-aws-backend-creation
 
   GitHub: [StratusGrid/terraform-aws-backend-creation](https://github.com/StratusGrid/terraform-aws-backend-creation)
@@ -99,6 +103,7 @@ content: |-
 
 sections:
   show:
+    - header
     - requirements
     - resources
     - inputs
